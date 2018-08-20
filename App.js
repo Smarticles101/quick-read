@@ -2,13 +2,16 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Constants } from 'expo';
 
+import Texts from './components/Texts';
 import Reader from './components/Reader';
+import { Header } from 'react-native-elements';
 
 export default class App extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Reader />
+        <Header centerComponent={{ text: 'Quick Read', style: { color: '#fff' } }}/>
+        <Texts />
       </View>
     );
   }
@@ -20,6 +23,5 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'stretch',
     justifyContent: 'center',
-    paddingTop: Constants.statusBarHeight
   },
 });

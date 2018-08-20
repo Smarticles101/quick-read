@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 
-import { Button, Slider, Icon } from 'react-native-elements';
+import { Slider, Icon } from 'react-native-elements';
 
 export default class Reader extends React.Component {
   state = {
@@ -116,6 +116,7 @@ export default class Reader extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     alignItems: 'stretch',
     justifyContent: 'center',
   },
