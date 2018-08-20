@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 
-import { Button, Slider } from 'react-native-elements';
+import { Button, Slider, Icon } from 'react-native-elements';
 
 export default class Reader extends React.Component {
   state = {
@@ -19,13 +19,18 @@ export default class Reader extends React.Component {
     }
 
     if (this.state.word === null) {
-        this.setState({ word: this.paragraph[this.index++] })
+      this.setState({ word: this.paragraph[this.index++] })
     }
   }
 
   nextWord() {
     if (!this.state.pause) {
       this.setState({ word: this.paragraph[this.index++] })
+
+      if (this.index >= this.paragraph.length) {
+        // restart for now when we end the story
+        this.index = 0;
+      }
     }
   }
 
@@ -84,37 +89,34 @@ export default class Reader extends React.Component {
         </Text>
         
         <View style={styles.buttonBar}>
-          <Button title="Back" onPress={this.back.bind(this)} />
+          <Icon reverse name="fast-rewind" onPress={this.back.bind(this)} />
           {!this.state.pause?
-            <Button title="Pause" onPress={this.pause.bind(this)} />
+            <Icon reverse name="pause" onPress={this.pause.bind(this)} />
           :
-            <Button title="Start" onPress={this.resume.bind(this)} />
+            <Icon reverse name="play-arrow" onPress={this.resume.bind(this)} />
           }
-          <Button title="Forward" onPress={this.forward.bind(this)} />
+          <Icon reverse name="fast-forward" onPress={this.forward.bind(this)} />
         </View>
 
-        <View style={styles.slider}>
-          <Text>
-            WPM: {this.state.wpm}
-          </Text>
+        <Text style={styles.statusText}>
+          WPM: {this.state.wpm}
+        </Text>
 
-          <Slider 
-            minimumValue={50}
-            maximumValue={1000}
-            step={50}
-            value={this.state.wpm}
-            onSlidingComplete={this.updateWPM.bind(this)}
-            
-          />
+        <Slider
+          minimumValue={50}
+          maximumValue={1000}
+          step={50}
+          value={this.state.wpm}
+          onValueChange={this.updateWPM.bind(this)}
+        />
         </View>
-      </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
+    alignItems: 'stretch',
     justifyContent: 'center',
   },
   paragraph: {
@@ -122,13 +124,15 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: 'bold',
     textAlign: 'center',
-    color: '#34495e',
+    color: '#34495e', 
+  },
+  statusText: {
+    textAlign: 'center',
+    fontSize: 20,
+    margin: 5    
   },
   buttonBar: {
-    flexDirection: 'row'
-  },
-  slider: {
-    flex: 1, 
-    alignItems: 'stretch', 
+    flexDirection: 'row',
+    justifyContent: 'center'
   }
 });
