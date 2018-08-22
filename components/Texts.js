@@ -3,6 +3,8 @@ import { StyleSheet, ScrollView, View } from 'react-native';
 
 import { Icon, List, ListItem, Card, FormInput, FormLabel, FormValidationMessage, Button } from 'react-native-elements';
 
+import Expo from 'expo';
+
 import Reader from './Reader';
 
 export default class Texts extends React.Component {
@@ -18,6 +20,10 @@ export default class Texts extends React.Component {
       text: null
     },
     texts: []
+  }
+
+  componentWillMount() {
+    Expo.SecureStore.getItemAsync('texts').then((texts) => this.setState({ texts: texts? JSON.parse(texts) : [] }))
   }
 
   formDataAddTitle(title) {
@@ -56,6 +62,8 @@ export default class Texts extends React.Component {
         titleEmpty: false,
         titleAlreadyExists: false
       })
+
+      Expo.SecureStore.setItemAsync('texts', JSON.stringify(texts))
     }
   }
 
@@ -98,7 +106,7 @@ export default class Texts extends React.Component {
                     Exiting focus on FormInput is finnicky
                 */
               }
-
+              
               <FormLabel>Title</FormLabel>
               <FormInput inputStyle={{width: undefined}} onChangeText={this.formDataAddTitle.bind(this)} />
               {this.state.titleEmpty?
@@ -108,8 +116,7 @@ export default class Texts extends React.Component {
               : null}
 
               <FormLabel>Text</FormLabel>
-              <FormInput multiline inputStyle={{width: undefined}} onChangeText={this.formDataAddText.bind(this)} />
-
+              <FormInput multiline maxHeight={200} inputStyle={{width: undefined}} onChangeText={this.formDataAddText.bind(this)} />
               <Button buttonStyle={styles.popupButton} title="Submit" onPress={this.submitFormData.bind(this)} />
           </Card>
         :
