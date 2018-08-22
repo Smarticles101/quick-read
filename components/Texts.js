@@ -11,6 +11,8 @@ export default class Texts extends React.Component {
     addText: false,
     reader: false,
     title: null,
+    titleEmpty: false,
+    titleAlreadyExists: false,
     formData: {
       title: null,
       text: null
@@ -76,18 +78,26 @@ export default class Texts extends React.Component {
   }
 
   submitFormData() {
-    texts = this.state.texts
+    if (!this.state.formData.title) {
+      this.setState({ titleEmpty: true, titleAlreadyExists: false })
+    } else if (this.state.texts.findIndex((e) => e.title === this.state.formData.title) !== -1) {
+      this.setState({ titleAlreadyExists: true, titleEmpty: false })
+    } else {
+      texts = this.state.texts
 
-    texts.push(this.state.formData)
+      texts.push(this.state.formData)
 
-    this.setState({
-      texts,
-      formData: {
-        title: null,
-        text: null
-      },
-      addText: false
-    })
+      this.setState({
+        texts,
+        formData: {
+          title: null,
+          text: null
+        },
+        addText: false,
+        titleEmpty: false,
+        titleAlreadyExists: false
+      })
+    }
   }
 
   render() {
@@ -127,13 +137,16 @@ export default class Texts extends React.Component {
                 /*
                   TODO:
                     Exiting focus on FormInput is finnicky
-                    Only display validation message when needed
                 */
               }
 
               <FormLabel>Title</FormLabel>
               <FormInput inputStyle={{width: undefined}} onChangeText={this.formDataAddTitle.bind(this)} />
-              <FormValidationMessage>A title is required</FormValidationMessage>
+              {this.state.titleEmpty?
+                <FormValidationMessage>A title is required</FormValidationMessage>
+                : this.state.titleAlreadyExists ?
+                  <FormValidationMessage>Title already exists</FormValidationMessage>
+              : null}
 
               <FormLabel>Text</FormLabel>
               <FormInput multiline inputStyle={{width: undefined}} onChangeText={this.formDataAddText.bind(this)} />
