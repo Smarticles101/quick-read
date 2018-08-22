@@ -3,10 +3,14 @@ import { StyleSheet, ScrollView, View } from 'react-native';
 
 import { Icon, List, ListItem, Card, FormInput, FormLabel, FormValidationMessage, Button } from 'react-native-elements';
 
+import Reader from './Reader';
+
 export default class Texts extends React.Component {
 
   state = {
-    addText: true,
+    addText: false,
+    reader: false,
+    title: null,
     formData: {
       title: null,
       text: null
@@ -47,6 +51,10 @@ export default class Texts extends React.Component {
       {
         "title": "minim",
         "text": "Magna eu Lorem ad ea nisi deserunt elit sit velit do anim est. Laboris id minim elit ea nisi Lorem velit. Amet ullamco amet nisi laborum sint reprehenderit tempor mollit elit elit incididunt. Ad nulla eu esse commodo.\r\n"
+      },
+      {
+        "title": "Lorem ipsum",
+        "text": "Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth. Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar. The Big Oxmox advised her not to do so, because there were thousands of bad Commas, wild Question Marks and devious Semikoli, but the Little Blind Text didn’t listen. She packed her seven versalia, put her initial into the belt and made herself on the way. When she reached the first hills of the Italic Mountains, she had a last view back on the skyline of her hometown Bookmarksgrove, the headline of Alphabet Village and the subline of her own road, the Line Lane. Pityful a rethoric question ran over her cheek, then"
       }
     ]
   }
@@ -92,12 +100,12 @@ export default class Texts extends React.Component {
                 <ListItem
                   key={element.title}
                   title={element.title}
-                  onPress={() => this.setState()}
+                  onPress={() => this.setState({ title: element.title, reader: true })}
                 />
 
                 /*
                   TODO:
-                    Open Reader view when ListItem is clicked on
+                    Open reader in a full-screen view rather than popup?
                 */
               )
             }
@@ -136,6 +144,17 @@ export default class Texts extends React.Component {
           null
         }
 
+        {
+          this.state.reader?
+            <Card containerStyle={styles.popup} title={this.state.title}>
+              <Reader paragraph={this.state.texts.find((e) => e.title === this.state.title).text} />
+
+              <Button buttonStyle={styles.popupButton} title="Close" onPress={() => this.setState({ reader: false, title: null })} />
+            </Card>
+          :
+            null
+        }
+
       </View>
     );
   }
@@ -157,7 +176,8 @@ const styles = StyleSheet.create({
     bottom: 10,
     left: 0,
     right: 0,
-    alignItems: 'stretch'
+    alignItems: 'stretch',
+    flex: 1
   },
   popupButton: {
     // TODO:
