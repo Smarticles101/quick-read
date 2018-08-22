@@ -4,7 +4,7 @@ An app built for the 2018 congressional app challenge that helps people read fas
 
 ### TODO
 - [X] Reading component
-- [ ] Adding texts via copy/paste (in progress)
+- [X] Adding texts via copy/paste
 - [ ] Local saving
 - [ ] Importing epub book
 - [ ] Cloud saving with google drive
