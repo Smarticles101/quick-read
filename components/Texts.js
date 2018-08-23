@@ -99,24 +99,26 @@ export default class Texts extends React.Component {
         </View>
 
         {this.state.addText?
-          <Card containerStyle={styles.popup} title="Add text">
+          <Card containerStyle={styles.popup} wrapperStyle={{flex: 1}} title="Add text">
               {
                 /*
                   TODO:
                     Exiting focus on FormInput is finnicky
                 */
               }
+              <View style={{flex: 1}}>
+                  <FormLabel>Title</FormLabel>
+                  <FormInput inputStyle={{width: undefined}} onChangeText={this.formDataAddTitle.bind(this)} />
+                  {this.state.titleEmpty?
+                    <FormValidationMessage>A title is required</FormValidationMessage>
+                    : this.state.titleAlreadyExists ?
+                      <FormValidationMessage>Title already exists</FormValidationMessage>
+                  : null}
+    
+                  <FormLabel>Text</FormLabel>
+                  <FormInput multiline maxHeight={200} inputStyle={{width: undefined}} onChangeText={this.formDataAddText.bind(this)} />
+              </View>
               
-              <FormLabel>Title</FormLabel>
-              <FormInput inputStyle={{width: undefined}} onChangeText={this.formDataAddTitle.bind(this)} />
-              {this.state.titleEmpty?
-                <FormValidationMessage>A title is required</FormValidationMessage>
-                : this.state.titleAlreadyExists ?
-                  <FormValidationMessage>Title already exists</FormValidationMessage>
-              : null}
-
-              <FormLabel>Text</FormLabel>
-              <FormInput multiline maxHeight={200} inputStyle={{width: undefined}} onChangeText={this.formDataAddText.bind(this)} />
               <Button buttonStyle={styles.popupButton} title="Submit" onPress={this.submitFormData.bind(this)} />
           </Card>
         :
@@ -125,9 +127,9 @@ export default class Texts extends React.Component {
 
         {
           this.state.reader?
-            <Card containerStyle={styles.popup} title={this.state.title}>
+            <Card containerStyle={styles.popup} wrapperStyle={{flex: 1}} title={this.state.title}>
               <Reader paragraph={this.state.texts.find((e) => e.title === this.state.title).text} />
-
+              
               <Button buttonStyle={styles.popupButton} title="Close" onPress={() => this.setState({ reader: false, title: null })} />
             </Card>
           :
@@ -142,7 +144,6 @@ export default class Texts extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'stretch'
   },
   fab: {
     position: 'absolute',
@@ -155,16 +156,13 @@ const styles = StyleSheet.create({
     bottom: 10,
     left: 0,
     right: 0,
-    alignItems: 'stretch',
-    flex: 1
   },
   popupButton: {
     // TODO:
     //    how to get Button to bottom of card?
-    borderRadius: 0, 
-    marginLeft: 0, 
-    marginRight: 0, 
-    marginBottom: 0,
-    marginTop: 10
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
   }
 });

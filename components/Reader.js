@@ -127,6 +127,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'stretch',
     justifyContent: 'center',
+    flex: 1
   },
   paragraph: {
     margin: 24,
