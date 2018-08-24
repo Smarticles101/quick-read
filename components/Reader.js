@@ -98,13 +98,13 @@ export default class Reader extends React.Component {
         </Text>
         
         <View style={styles.buttonBar}>
-          <Icon reverse name="fast-rewind" onPress={this.back.bind(this)} />
+          <Icon size={30} name="fast-rewind" onPress={this.back.bind(this)} />
           {!this.state.pause?
-            <Icon reverse name="pause" onPress={this.pause.bind(this)} />
+            <Icon size={30} name="pause" onPress={this.pause.bind(this)} />
           :
-            <Icon reverse name="play-arrow" onPress={this.resume.bind(this)} />
+            <Icon size={30} name="play-arrow" onPress={this.resume.bind(this)} />
           }
-          <Icon reverse name="fast-forward" onPress={this.forward.bind(this)} />
+          <Icon size={30} name="fast-forward" onPress={this.forward.bind(this)} />
         </View>
 
         <Text style={styles.statusText}>
@@ -126,11 +126,10 @@ export default class Reader extends React.Component {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'stretch',
-    justifyContent: 'center',
+    marginTop: 50,
     flex: 1
   },
   paragraph: {
-    margin: 24,
     fontSize: 28,
     fontWeight: 'bold',
     textAlign: 'center',
@@ -139,10 +138,11 @@ const styles = StyleSheet.create({
   statusText: {
     textAlign: 'center',
     fontSize: 20,
-    margin: 5    
+    margin: 5
   },
   buttonBar: {
     flexDirection: 'row',
-    justifyContent: 'center'
+    justifyContent: 'space-around',
+    margin: 24
   }
 });

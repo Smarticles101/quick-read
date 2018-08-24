@@ -12,6 +12,7 @@ export default class Texts extends React.Component {
   state = {
     addText: false,
     reader: false,
+    edit: false,
     title: null,
     titleEmpty: false,
     titleAlreadyExists: false,
@@ -24,6 +25,18 @@ export default class Texts extends React.Component {
 
   componentWillMount() {
     Expo.SecureStore.getItemAsync('texts').then((texts) => this.setState({ texts: texts? JSON.parse(texts) : [] }))
+  }
+
+  componentDidUpdate(oldProps, oldState) {
+    //console.log(this.state.texts.length);
+    //console.log(oldState.texts.length);
+    //if (this.state.texts != oldState.texts) {
+    //  console.log('Saving')
+      Expo.SecureStore.setItemAsync('texts', JSON.stringify(this.state.texts))
+    //}
+
+    // Not sure why this doesn't work????
+    // Let's just save all the time ;)
   }
 
   formDataAddTitle(title) {
@@ -62,9 +75,29 @@ export default class Texts extends React.Component {
         titleEmpty: false,
         titleAlreadyExists: false
       })
-
-      Expo.SecureStore.setItemAsync('texts', JSON.stringify(texts))
     }
+  }
+
+  editTitleSubmitFormData() {
+    if (!this.state.formData.title) {
+      this.setState({ titleEmpty: true, titleAlreadyExists: false })
+    } else {
+      textIndex = this.state.texts.findIndex((e) => e.title === this.state.title)
+      texts = this.state.texts
+
+      texts.splice(textIndex, 1, this.state.formData)
+
+      this.setState({edit: false, formData: {}, titleEmpty: false, title: this.state.formData.title, texts})
+    }
+  }
+
+  deleteTitle() {
+    textIndex = this.state.texts.findIndex((e) => e.title === this.state.title)
+    texts = this.state.texts
+
+    texts.splice(textIndex, 1)
+
+    this.setState({edit: false, formData: {}, titleEmpty: false, title: null, reader: false, texts})
   }
 
   render() {
@@ -79,17 +112,12 @@ export default class Texts extends React.Component {
                   title={element.title}
                   onPress={() => this.setState({ title: element.title, reader: true })}
                 />
-
-                /*
-                  TODO:
-                    Open reader in a full-screen view rather than popup?
-                */
               )
             }
           </List>
         </ScrollView>
 
-        <View style={styles.fab}>
+        <View style={styles.fabRight}>
           <Icon
             reverse
             raised
@@ -107,19 +135,32 @@ export default class Texts extends React.Component {
                 */
               }
               <View style={{flex: 1}}>
-                  <FormLabel>Title</FormLabel>
-                  <FormInput inputStyle={{width: undefined}} onChangeText={this.formDataAddTitle.bind(this)} />
-                  {this.state.titleEmpty?
-                    <FormValidationMessage>A title is required</FormValidationMessage>
-                    : this.state.titleAlreadyExists ?
-                      <FormValidationMessage>Title already exists</FormValidationMessage>
-                  : null}
-    
-                  <FormLabel>Text</FormLabel>
-                  <FormInput multiline maxHeight={200} inputStyle={{width: undefined}} onChangeText={this.formDataAddText.bind(this)} />
+                <FormLabel>Title</FormLabel>
+                <FormInput inputStyle={{width: undefined}} onChangeText={this.formDataAddTitle.bind(this)} />
+                {this.state.titleEmpty?
+                  <FormValidationMessage>A title is required</FormValidationMessage>
+                  : this.state.titleAlreadyExists ?
+                    <FormValidationMessage>Title already exists</FormValidationMessage>
+                : null}
+
+                <FormLabel>Text</FormLabel>
+                <FormInput multiline maxHeight={200} inputStyle={{width: undefined}} onChangeText={this.formDataAddText.bind(this)} />
               </View>
               
-              <Button buttonStyle={styles.popupButton} title="Submit" onPress={this.submitFormData.bind(this)} />
+              <Icon
+                containerStyle={styles.fabLeft}
+                reverse
+                color='red'
+                name="clear"
+                onPress={() => this.setState({ addText: false, formData: {}})}
+                />
+              <Icon
+                containerStyle={styles.fabRight}
+                reverse
+                color='green'
+                name="done"
+                onPress={this.submitFormData.bind(this)}
+                />
           </Card>
         :
           null
@@ -128,9 +169,53 @@ export default class Texts extends React.Component {
         {
           this.state.reader?
             <Card containerStyle={styles.popup} wrapperStyle={{flex: 1}} title={this.state.title}>
-              <Reader paragraph={this.state.texts.find((e) => e.title === this.state.title).text} />
-              
-              <Button buttonStyle={styles.popupButton} title="Close" onPress={() => this.setState({ reader: false, title: null })} />
+              {!this.state.edit?
+                <View style={{flex: 1}}>
+                  <Reader paragraph={this.state.texts.find((e) => e.title === this.state.title).text} />
+                  
+                  <Icon
+                    containerStyle={styles.fabRight}
+                    reverse
+                    name="clear"
+                    onPress={() => this.setState({ reader: false, title: null })}
+                  />
+
+                  <Icon
+                    containerStyle={styles.fabLeft}
+                    reverse
+                    color="orange"
+                    name="edit"
+                    onPress={() => this.setState({ edit: true, formData: {title:this.state.title, text:this.state.texts.find((e) => e.title === this.state.title).text} })}
+                  />
+                </View>
+              :
+                <View style={{flex: 1}}>
+                  <FormLabel>Title</FormLabel>
+                  <FormInput inputStyle={{width: undefined}} value={this.state.formData.title} onChangeText={this.formDataAddTitle.bind(this)} />
+                  {this.state.titleEmpty?
+                    <FormValidationMessage>A title is required</FormValidationMessage>
+                  : null}
+
+                  <FormLabel>Text</FormLabel>
+                  <FormInput multiline maxHeight={200} inputStyle={{width: undefined}} value={this.state.formData.text} onChangeText={this.formDataAddText.bind(this)} />
+                    
+                  <Icon
+                    containerStyle={styles.fabLeft}
+                    reverse
+                    color="red"
+                    name="delete"
+                    onPress={this.deleteTitle.bind(this)}
+                  />
+
+                  <Icon
+                    containerStyle={styles.fabRight}
+                    reverse
+                    color="green"
+                    name="done"
+                    onPress={this.editTitleSubmitFormData.bind(this)}
+                  />
+                </View>
+              }
             </Card>
           :
             null
@@ -145,9 +230,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  fab: {
+  fabRight: {
     position: 'absolute',
     right: 10,
+    bottom: 10
+  },
+  fabLeft: {
+    position: 'absolute',
+    left: 10,
     bottom: 10
   },
   popup: {
@@ -158,8 +248,6 @@ const styles = StyleSheet.create({
     right: 0,
   },
   popupButton: {
-    // TODO:
-    //    how to get Button to bottom of card?
     position: 'absolute',
     left: 0,
     right: 0,
