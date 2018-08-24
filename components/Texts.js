@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, ScrollView, View } from 'react-native';
 
-import { Icon, List, ListItem, Card, FormInput, FormLabel, FormValidationMessage } from 'react-native-elements';
+import { Icon, List, ListItem, Card, FormInput, FormLabel, FormValidationMessage, Button } from 'react-native-elements';
 
 import Expo from 'expo';
 
@@ -146,6 +146,15 @@ export default class Texts extends React.Component {
               <FormLabel>Text</FormLabel>
               <FormInput multiline maxHeight={200} inputStyle={{ width: undefined }} onChangeText={this.formDataAddText.bind(this)} />
             </View>
+            
+            <View style={styles.fabCenter}>
+              <Icon 
+                name='folder'
+                color='orange'
+                reverse
+                onPress={() => Expo.DocumentPicker.getDocumentAsync()}
+              />
+            </View>
 
             <Icon
               containerStyle={styles.fabLeft}
@@ -198,7 +207,7 @@ export default class Texts extends React.Component {
 
                   <FormLabel>Text</FormLabel>
                   <FormInput multiline maxHeight={200} inputStyle={{ width: undefined }} value={this.state.formData.text} onChangeText={this.formDataAddText.bind(this)} />
-
+                  
                   <Icon
                     containerStyle={styles.fabLeft}
                     reverse
@@ -239,6 +248,14 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 10,
     bottom: 10
+  },
+  fabCenter: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 10,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   popup: {
     position: 'absolute',
