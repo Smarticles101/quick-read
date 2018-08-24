@@ -14,11 +14,11 @@ export default class Reader extends React.Component {
   paragraph = null
 
   componentDidMount() {
-    
+
     this.paragraph = this.props.paragraph.split(" ")
 
     if (!this.interval) {
-      this.interval = setInterval(this.nextWord.bind(this), 1 / (this.state.wpm/ 60) * 1000 )
+      this.interval = setInterval(this.nextWord.bind(this), 1 / (this.state.wpm / 60) * 1000)
     }
 
     if (this.state.word === null) {
@@ -77,7 +77,7 @@ export default class Reader extends React.Component {
         break;
       }
     }
-    
+
     this.setState({ word: this.paragraph[this.index] });
   }
 
@@ -96,12 +96,12 @@ export default class Reader extends React.Component {
         <Text style={styles.paragraph}>
           {this.state.word}
         </Text>
-        
+
         <View style={styles.buttonBar}>
           <Icon size={30} name="fast-rewind" onPress={this.back.bind(this)} />
-          {!this.state.pause?
+          {!this.state.pause ?
             <Icon size={30} name="pause" onPress={this.pause.bind(this)} />
-          :
+            :
             <Icon size={30} name="play-arrow" onPress={this.resume.bind(this)} />
           }
           <Icon size={30} name="fast-forward" onPress={this.forward.bind(this)} />
@@ -118,7 +118,7 @@ export default class Reader extends React.Component {
           value={this.state.wpm}
           onValueChange={this.updateWPM.bind(this)}
         />
-        </View>
+      </View>
     );
   }
 }
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: 'bold',
     textAlign: 'center',
-    color: '#34495e', 
+    color: '#34495e',
   },
   statusText: {
     textAlign: 'center',

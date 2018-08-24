@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, ScrollView, View } from 'react-native';
 
-import { Icon, List, ListItem, Card, FormInput, FormLabel, FormValidationMessage, Button } from 'react-native-elements';
+import { Icon, List, ListItem, Card, FormInput, FormLabel, FormValidationMessage } from 'react-native-elements';
 
 import Expo from 'expo';
 
@@ -24,7 +24,7 @@ export default class Texts extends React.Component {
   }
 
   componentWillMount() {
-    Expo.SecureStore.getItemAsync('texts').then((texts) => this.setState({ texts: texts? JSON.parse(texts) : [] }))
+    Expo.SecureStore.getItemAsync('texts').then((texts) => this.setState({ texts: texts ? JSON.parse(texts) : [] }))
   }
 
   componentDidUpdate(oldProps, oldState) {
@@ -32,7 +32,7 @@ export default class Texts extends React.Component {
     //console.log(oldState.texts.length);
     //if (this.state.texts != oldState.texts) {
     //  console.log('Saving')
-      Expo.SecureStore.setItemAsync('texts', JSON.stringify(this.state.texts))
+    Expo.SecureStore.setItemAsync('texts', JSON.stringify(this.state.texts))
     //}
 
     // Not sure why this doesn't work????
@@ -87,7 +87,7 @@ export default class Texts extends React.Component {
 
       texts.splice(textIndex, 1, this.state.formData)
 
-      this.setState({edit: false, formData: {}, titleEmpty: false, title: this.state.formData.title, texts})
+      this.setState({ edit: false, formData: {}, titleEmpty: false, title: this.state.formData.title, texts })
     }
   }
 
@@ -97,7 +97,7 @@ export default class Texts extends React.Component {
 
     texts.splice(textIndex, 1)
 
-    this.setState({edit: false, formData: {}, titleEmpty: false, title: null, reader: false, texts})
+    this.setState({ edit: false, formData: {}, titleEmpty: false, title: null, reader: false, texts })
   }
 
   render() {
@@ -126,53 +126,53 @@ export default class Texts extends React.Component {
           />
         </View>
 
-        {this.state.addText?
-          <Card containerStyle={styles.popup} wrapperStyle={{flex: 1}} title="Add text">
-              {
-                /*
-                  TODO:
-                    Exiting focus on FormInput is finnicky
-                */
-              }
-              <View style={{flex: 1}}>
-                <FormLabel>Title</FormLabel>
-                <FormInput inputStyle={{width: undefined}} onChangeText={this.formDataAddTitle.bind(this)} />
-                {this.state.titleEmpty?
-                  <FormValidationMessage>A title is required</FormValidationMessage>
-                  : this.state.titleAlreadyExists ?
-                    <FormValidationMessage>Title already exists</FormValidationMessage>
-                : null}
+        {this.state.addText ?
+          <Card containerStyle={styles.popup} wrapperStyle={{ flex: 1 }} title="Add text">
+            {
+              /*
+                TODO:
+                  Exiting focus on FormInput is finnicky
+              */
+            }
+            <View style={{ flex: 1 }}>
+              <FormLabel>Title</FormLabel>
+              <FormInput inputStyle={{ width: undefined }} onChangeText={this.formDataAddTitle.bind(this)} />
+              {this.state.titleEmpty ?
+                <FormValidationMessage>A title is required</FormValidationMessage>
+                : this.state.titleAlreadyExists ?
+                  <FormValidationMessage>Title already exists</FormValidationMessage>
+                  : null}
 
-                <FormLabel>Text</FormLabel>
-                <FormInput multiline maxHeight={200} inputStyle={{width: undefined}} onChangeText={this.formDataAddText.bind(this)} />
-              </View>
-              
-              <Icon
-                containerStyle={styles.fabLeft}
-                reverse
-                color='red'
-                name="clear"
-                onPress={() => this.setState({ addText: false, formData: {}})}
-                />
-              <Icon
-                containerStyle={styles.fabRight}
-                reverse
-                color='green'
-                name="done"
-                onPress={this.submitFormData.bind(this)}
-                />
+              <FormLabel>Text</FormLabel>
+              <FormInput multiline maxHeight={200} inputStyle={{ width: undefined }} onChangeText={this.formDataAddText.bind(this)} />
+            </View>
+
+            <Icon
+              containerStyle={styles.fabLeft}
+              reverse
+              color='red'
+              name="clear"
+              onPress={() => this.setState({ addText: false, formData: {} })}
+            />
+            <Icon
+              containerStyle={styles.fabRight}
+              reverse
+              color='green'
+              name="done"
+              onPress={this.submitFormData.bind(this)}
+            />
           </Card>
-        :
+          :
           null
         }
 
         {
-          this.state.reader?
-            <Card containerStyle={styles.popup} wrapperStyle={{flex: 1}} title={this.state.title}>
-              {!this.state.edit?
-                <View style={{flex: 1}}>
+          this.state.reader ?
+            <Card containerStyle={styles.popup} wrapperStyle={{ flex: 1 }} title={this.state.title}>
+              {!this.state.edit ?
+                <View style={{ flex: 1 }}>
                   <Reader paragraph={this.state.texts.find((e) => e.title === this.state.title).text} />
-                  
+
                   <Icon
                     containerStyle={styles.fabRight}
                     reverse
@@ -185,20 +185,20 @@ export default class Texts extends React.Component {
                     reverse
                     color="orange"
                     name="edit"
-                    onPress={() => this.setState({ edit: true, formData: {title:this.state.title, text:this.state.texts.find((e) => e.title === this.state.title).text} })}
+                    onPress={() => this.setState({ edit: true, formData: { title: this.state.title, text: this.state.texts.find((e) => e.title === this.state.title).text } })}
                   />
                 </View>
-              :
-                <View style={{flex: 1}}>
+                :
+                <View style={{ flex: 1 }}>
                   <FormLabel>Title</FormLabel>
-                  <FormInput inputStyle={{width: undefined}} value={this.state.formData.title} onChangeText={this.formDataAddTitle.bind(this)} />
-                  {this.state.titleEmpty?
+                  <FormInput inputStyle={{ width: undefined }} value={this.state.formData.title} onChangeText={this.formDataAddTitle.bind(this)} />
+                  {this.state.titleEmpty ?
                     <FormValidationMessage>A title is required</FormValidationMessage>
-                  : null}
+                    : null}
 
                   <FormLabel>Text</FormLabel>
-                  <FormInput multiline maxHeight={200} inputStyle={{width: undefined}} value={this.state.formData.text} onChangeText={this.formDataAddText.bind(this)} />
-                    
+                  <FormInput multiline maxHeight={200} inputStyle={{ width: undefined }} value={this.state.formData.text} onChangeText={this.formDataAddText.bind(this)} />
+
                   <Icon
                     containerStyle={styles.fabLeft}
                     reverse
@@ -217,7 +217,7 @@ export default class Texts extends React.Component {
                 </View>
               }
             </Card>
-          :
+            :
             null
         }
 

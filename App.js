@@ -1,16 +1,14 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { Constants } from 'expo';
+import { StyleSheet, View } from 'react-native';
 
 import Texts from './components/Texts';
-import Reader from './components/Reader';
 import { Header } from 'react-native-elements';
 
 export default class App extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Header centerComponent={{ text: 'Quick Read', style: { color: '#fff' } }}/>
+        <Header centerComponent={{ text: 'Quick Read', style: { color: '#fff' } }} />
         <Texts />
       </View>
     );
