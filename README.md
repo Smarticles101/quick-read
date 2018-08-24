@@ -8,3 +8,4 @@ An app that helps people read faster.
 - [X] Local saving
 - [ ] Importing epub book
 - [ ] Cloud saving with google drive
+- [ ] Refactor / Rewrite
