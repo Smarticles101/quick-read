@@ -7,7 +7,7 @@ import Expo from 'expo';
 
 import Reader from './Reader';
 
-import EventEmitter from 'events';
+import EPub from 'epub-rn'
 
 export default class Texts extends React.Component {
 
@@ -154,13 +154,7 @@ export default class Texts extends React.Component {
                 name='folder'
                 color='orange'
                 reverse
-                onPress={() => {
-                  Expo.DocumentPicker.getDocumentAsync({type: "application/epub+zip"}).then((retDat) => {
-                    if (retDat.type !== "cancel") {
-                      Expo.FileSystem.readAsStringAsync(retDat.uri).then((cont) => console.log(cont));
-                    }
-                  })
-                }}
+                onPress={() => Expo.DocumentPicker.getDocumentAsync()}
               />
             </View>
 
