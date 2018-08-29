@@ -4,10 +4,11 @@ import { StyleSheet, ScrollView, View } from 'react-native';
 import { Icon, List, ListItem, Card, FormInput, FormLabel, FormValidationMessage, Button } from 'react-native-elements';
 
 import Expo from 'expo';
+import { FileSystem } from 'expo';
 
 import Reader from './Reader';
 
-import EPub from 'epub-rn'
+import EPub from 'epub-rn';
 
 export default class Texts extends React.Component {
 
@@ -102,6 +103,34 @@ export default class Texts extends React.Component {
     this.setState({ edit: false, formData: {}, titleEmpty: false, title: null, reader: false, texts })
   }
 
+  async downloadEpub() {
+    await Expo.DocumentPicker.getDocumentAsync({type: "application/epub+zip"}).then(async (dat) => {
+      console.log(dat.uri)
+      epub = new EPub(dat.uri)
+      epub.parse()
+      texts = []
+      epub.on('end', async () => {
+
+        this.formDataAddTitle(epub.metadata.title)
+        
+        for (var i = 0; i < epub.flow.length; i++) {
+          var done = new Promise((res, rej) => {
+
+            epub.getChapter(epub.flow[i].id, (err, txt) => {
+              texts[i] = txt.replace(/<[^>]+>/g, '')
+              res()
+              console.log('yee')
+            })
+          });
+          
+          await done
+        }
+
+        this.formDataAddText(texts.join(" "))
+      })
+    })
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -138,7 +167,7 @@ export default class Texts extends React.Component {
             }
             <View style={{ flex: 1 }}>
               <FormLabel>Title</FormLabel>
-              <FormInput inputStyle={{ width: undefined }} onChangeText={this.formDataAddTitle.bind(this)} />
+              <FormInput inputStyle={{ width: undefined }} value={this.state.formData.title} onChangeText={this.formDataAddTitle.bind(this)} />
               {this.state.titleEmpty ?
                 <FormValidationMessage>A title is required</FormValidationMessage>
                 : this.state.titleAlreadyExists ?
@@ -146,7 +175,7 @@ export default class Texts extends React.Component {
                   : null}
 
               <FormLabel>Text</FormLabel>
-              <FormInput multiline maxHeight={200} inputStyle={{ width: undefined }} onChangeText={this.formDataAddText.bind(this)} />
+              <FormInput multiline maxHeight={200} inputStyle={{ width: undefined }} value={this.state.formData.text} onChangeText={this.formDataAddText.bind(this)} />
             </View>
             
             <View style={styles.fabCenter}>
@@ -154,7 +183,7 @@ export default class Texts extends React.Component {
                 name='folder'
                 color='orange'
                 reverse
-                onPress={() => Expo.DocumentPicker.getDocumentAsync()}
+                onPress={this.downloadEpub.bind(this)}
               />
             </View>
 

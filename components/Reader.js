@@ -15,7 +15,7 @@ export default class Reader extends React.Component {
 
   componentDidMount() {
 
-    this.paragraph = this.props.paragraph.split(" ")
+    this.paragraph = this.props.paragraph.split(/ |\n/g)
 
     if (!this.interval) {
       this.interval = setInterval(this.nextWord.bind(this), 1 / (this.state.wpm / 60) * 1000)
@@ -34,7 +34,13 @@ export default class Reader extends React.Component {
 
   nextWord() {
     if (!this.state.pause) {
-      this.setState({ word: this.paragraph[this.index++] })
+      word = null
+      
+      do {
+        word = this.paragraph[this.index++]
+      } while (word === '')
+
+      this.setState({ word })
 
       if (this.index >= this.paragraph.length) {
         // restart for now when we end the story
@@ -52,10 +58,11 @@ export default class Reader extends React.Component {
   }
 
   back() {
+    regexp = new RegExp(/\.$|!$|\?$/)
     var i;
 
     for (i = this.index - 2; i >= 0; i--) {
-      if (this.paragraph[i].endsWith('.')) {
+      if (regexp.test(this.paragraph[i])) {
         this.index = i + 1;
         break;
       }
@@ -65,20 +72,33 @@ export default class Reader extends React.Component {
       this.index = 0;
     }
 
-    this.setState({ word: this.paragraph[this.index] })
+    word = null
+      
+    do {
+      word = this.paragraph[this.index++]
+    } while (word === '')
+
+    this.setState({ word });
   }
 
   forward() {
+    regexp = new RegExp(/\.$|!$|\?$/)
     var i;
 
     for (i = this.index; i < this.paragraph.length; i++) {
-      if (this.paragraph[i].endsWith('.')) {
+      if (regexp.test(this.paragraph[i])) {
         this.index = i + 1;
         break;
       }
     }
 
-    this.setState({ word: this.paragraph[this.index] });
+    word = null
+      
+    do {
+      word = this.paragraph[this.index++]
+    } while (word === '')
+
+    this.setState({ word });
   }
 
   updateWPM(wpm) {
