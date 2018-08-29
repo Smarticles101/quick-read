@@ -1,5 +1,14 @@
-{
-  "expo": {
-    "sdkVersion": "27.0.0"
-  }
-}
+"expo": {
+    "name": "Quick Read",
+    "icon": "./web_hi_res_512.png",
+    "version": "0.1.0beta",
+    "slug": "quick-read",
+    "sdkVersion": "27.0.0",
+    "ios": {
+      "bundleIdentifier": "me.logans.quickread"
+    },
+    "android": {
+      "package": "me.logans.quickread"
+    },
+    "privacy": "unlisted"
+   }
