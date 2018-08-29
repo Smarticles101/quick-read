@@ -1,4 +1,5 @@
-"expo": {
+{
+  "expo": {
     "name": "Quick Read",
     "icon": "./web_hi_res_512.png",
     "version": "0.1.0beta",
@@ -12,3 +13,4 @@
     },
     "privacy": "unlisted"
    }
+}
