@@ -11,4 +11,5 @@ An app that helps people read faster.
 - [ ] Better textfield handling
 - [ ] Loading indicator when importing epub
 - [ ] Cloud saving with google drive
+- [ ] Refactor / Rewrite
 - [ ] Statistics profile
