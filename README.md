@@ -13,11 +13,12 @@ goals. Each individual goal is not sorted cronologically.
 - [X] Importing epub book
 - [ ] Importing pdf book
 - [ ] Bookmarks/spot saving
-- [ ] View chapters if imported from pdf or epub
+- [ ] View chapters if imported from epub
 - [ ] Better textfield handling
 - [ ] Loading indicator when importing epub
 
 #### Mid-term (may happen)
+- [ ] Animate all the things!
 - [ ] Refactor / Rewrite
 - [ ] Cloud saving with google drive
 
