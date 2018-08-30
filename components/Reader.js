@@ -75,7 +75,8 @@ export default class Reader extends React.Component {
     word = null
       
     do {
-      word = this.paragraph[this.index++]
+      word = this.paragraph[this.index]
+      if (word === '') this.index++
     } while (word === '')
 
     this.setState({ word });
