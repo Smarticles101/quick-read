@@ -13,7 +13,7 @@ export default class Reader extends React.Component {
   index = 0
   paragraph = null
 
-  componentDidMount() {
+  componentWillMount() {
 
     this.paragraph = this.props.paragraph.split(/ |\n/g)
 
@@ -128,10 +128,6 @@ export default class Reader extends React.Component {
           <Icon size={30} name="fast-forward" onPress={this.forward.bind(this)} />
         </View>
 
-        <Text style={styles.statusText}>
-          WPM: {this.state.wpm}
-        </Text>
-
         <Slider
           minimumValue={50}
           maximumValue={1000}
@@ -139,6 +135,10 @@ export default class Reader extends React.Component {
           value={this.state.wpm}
           onValueChange={this.updateWPM.bind(this)}
         />
+
+        <Text style={styles.statusText}>
+          {`${this.state.wpm}wpm\n${this.index}/${this.paragraph.length}`}
+        </Text>
       </View>
     );
   }
@@ -159,7 +159,6 @@ const styles = StyleSheet.create({
   statusText: {
     textAlign: 'center',
     fontSize: 20,
-    margin: 5
   },
   buttonBar: {
     flexDirection: 'row',
