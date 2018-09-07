@@ -2,7 +2,7 @@
   "expo": {
     "name": "Quick Read",
     "icon": "./web_hi_res_512.png",
-    "version": "0.1.0beta",
+    "version": "0.1.1beta",
     "slug": "quick-read",
     "sdkVersion": "27.0.0",
     "ios": {
