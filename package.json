@@ -19,6 +19,7 @@
     "preset": "jest-expo"
   },
   "dependencies": {
+    "dateformat": "^3.0.3",
     "epub-rn": "git+https://github.com/Smarticles101/epub-rn.git",
     "expo": "^27.0.1",
     "react": "16.3.1",

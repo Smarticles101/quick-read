@@ -76,17 +76,23 @@ export default class Texts extends React.Component {
         
           var done = new Promise((res, rej) => {
             epub.getChapter(epub.flow[i].id, (err, txt) => {
-              chapters[i].text = txt.replace(/<[^>]+>/g, '').replace("\r\n", " ").replace("\n", " ").replace("\t", " ")
+              chapters[i].text = txt.replace(/<[^>]+>/g, '').replace(/\r|\n|\t/g, " ")
+              
+              while (chapters[i].text.indexOf("  ") !== -1) {
+                chapters[i].text = chapters[i].text.replace("  ", " ")
+              }
+
+              chapters[i].text = chapters[i].text.trim()
+              
               chapters[i].title = epub.flow[i].title
+              chapters[i].id = epub.flow[i].id
               res()
             })
           });
           
           await done
         }
-        
-        console.log(chapters)
-        
+
         this.submitFormData({ title: epub.metadata.title, chapters, type: 'epub' })
       })
     })

@@ -1,7 +1,9 @@
 import * as React from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet, ScrollView } from 'react-native';
 
-import { Slider, Icon } from 'react-native-elements';
+import { Slider, Icon, List, ListItem } from 'react-native-elements';
+
+const dateformat = require('dateformat');
 
 export default class Reader extends React.Component {
   state = {
@@ -26,7 +28,11 @@ export default class Reader extends React.Component {
     }
 
     if (this.state.word === null) {
-      this.setState({ word: this.paragraph[this.index++] })
+      do {
+        word = this.paragraph[this.index++]
+      } while (word === '')
+
+      this.setState({ word })
     }
   }
 
@@ -115,9 +121,57 @@ export default class Reader extends React.Component {
     this.setState({ wpm });
   }
 
+  timeLeft() {
+    wordsPerSeconds = this.state.wpm / 60;
+
+    timeLeft = Math.round((this.paragraph.length - this.index)/wordsPerSeconds);
+
+    timeLeft = new Date(timeLeft * 1000);
+
+    response = dateformat(timeLeft, "UTC:hh:MM:ss");
+
+    if(timeLeft < 3600 * 1000) {
+      response = response.replace("12", "00");
+    }
+
+    return response;
+  }
+
   render() {
     return (
       <View style={styles.container}>
+        {this.props.book.chapters? 
+        <ScrollView
+          style={styles.chapterScroll}
+        >
+          <List>
+            {
+              this.props.book.chapters.map((chap, ind, arr) => 
+                chap.title ?
+                <ListItem
+                  key={chap.id}
+                  title={chap.title}
+                  onPress={() => {
+                    index = 0;
+
+                    for (var i = 0; i < ind; i++) {
+                      index += arr[i].text.split(" ").length
+                    }
+
+                    this.index = index
+                    this.setState({ word: this.paragraph[index] })
+                  }}
+                />
+                :
+                null
+              )
+            }
+          </List>
+        </ScrollView>
+        :
+        null
+        }
+
         <Text style={styles.paragraph}>
           {this.state.word}
         </Text>
@@ -141,7 +195,7 @@ export default class Reader extends React.Component {
         />
 
         <Text style={styles.statusText}>
-          {`${this.state.wpm}wpm\n${this.index}/${this.paragraph.length}`}
+          {`${this.state.wpm}wpm\n${this.index}/${this.paragraph.length}\n${this.timeLeft()}`}
         </Text>
       </View>
     );
@@ -151,7 +205,6 @@ export default class Reader extends React.Component {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'stretch',
-    marginTop: 50,
     flex: 1
   },
   paragraph: {
@@ -159,6 +212,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     color: '#34495e',
+    marginTop: 50,
+    marginBottom: 20
   },
   statusText: {
     textAlign: 'center',
@@ -168,5 +223,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     margin: 24
+  },
+  chapterScroll: {
+    height: 50,
+    flexGrow: 0
   }
 });
