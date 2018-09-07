@@ -48,7 +48,7 @@ export default class Texts extends React.Component {
       
     texts = this.state.texts
 
-    texts.push({title, text: formData.text})
+    texts.push({...formData, title})
 
     this.setState({ texts })
   }
@@ -66,22 +66,28 @@ export default class Texts extends React.Component {
     await Expo.DocumentPicker.getDocumentAsync({type: "application/epub+zip"}).then(async (dat) => {
       epub = new EPub(dat.uri)
       epub.parse()
-      texts = []
+      chapters = []
       epub.on('end', async () => {
         
+        
         for (var i = 0; i < epub.flow.length; i++) {
+        
+          chapters[i] = {}
+        
           var done = new Promise((res, rej) => {
-
             epub.getChapter(epub.flow[i].id, (err, txt) => {
-              texts[i] = txt.replace(/<[^>]+>/g, '').replace("\r\n", "").replace("\n", "").replace("\t", "")
+              chapters[i].text = txt.replace(/<[^>]+>/g, '').replace("\r\n", " ").replace("\n", " ").replace("\t", " ")
+              chapters[i].title = epub.flow[i].title
               res()
             })
           });
           
           await done
         }
-
-        this.submitFormData({ title: epub.metadata.title, text: texts.join(" ") })
+        
+        console.log(chapters)
+        
+        this.submitFormData({ title: epub.metadata.title, chapters, type: 'epub' })
       })
     })
   }
@@ -134,7 +140,7 @@ export default class Texts extends React.Component {
               color: 'red'
             }}
             onLeftFab={() => this.setState({ addText: false })}
-            onSubmit={(formData) => {this.submitFormData(formData); this.setState({ addText: false })}}
+            onSubmit={(formData) => {this.submitFormData({...formData, type: 'raw'}); this.setState({ addText: false })}}
           />
           : null
         }
@@ -144,7 +150,8 @@ export default class Texts extends React.Component {
             <Card containerStyle={styles.popup} wrapperStyle={{ flex: 1 }} title={this.state.title}>
               {!this.state.edit ?
                 <View style={{ flex: 1 }}>
-                  <Reader paragraph={this.state.texts.find((e) => e.title === this.state.title).text} />
+                
+                  <Reader book={this.state.texts.find((e) => e.title === this.state.title)} />
 
                   <Fab
                     containerStyle={styles.fabLeft}

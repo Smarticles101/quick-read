@@ -15,10 +15,14 @@ export default class Reader extends React.Component {
 
   componentWillMount() {
 
-    this.paragraph = this.props.paragraph.split(/ |\n/g)
+    if (this.props.book.text) {
+      this.paragraph = this.props.book.text.split(" ")
+    } else if (this.props.book.chapters) {
+      this.paragraph = this.props.book.chapters.map((chap) => chap.text).join(" ").split(" ")
+    }
 
-    if (!this.interval) {
-      this.interval = setInterval(this.nextWord.bind(this), 1 / (this.state.wpm / 60) * 1000)
+    if (!this.timeout) {
+      this.timeout = setTimeout(this.tick.bind(this), 1 / (this.state.wpm / 60) * 1000)
     }
 
     if (this.state.word === null) {
@@ -27,15 +31,16 @@ export default class Reader extends React.Component {
   }
 
   componentWillUnmount() {
-    if (this.interval) {
-      clearInterval(this.interval)
+    if (this.timeout) {
+      clearInterval(this.timeout)
     }
   }
 
-  nextWord() {
+  tick() {
+    time = 1 / (this.state.wpm / 60) * 1000
+    word = this.state.word
+    
     if (!this.state.pause) {
-      word = null
-      
       do {
         word = this.paragraph[this.index++]
       } while (word === '')
@@ -47,6 +52,8 @@ export default class Reader extends React.Component {
         this.index = 0;
       }
     }
+    
+    this.timeout = setTimeout(this.tick.bind(this), new RegExp(/\.$|!$|\?$|\;$|\,$/).test(word) ? time * 2 : time)
   }
 
   pause() {
@@ -105,9 +112,6 @@ export default class Reader extends React.Component {
   updateWPM(wpm) {
     ms = 1 / (wpm / 60) * 1000;
 
-    clearInterval(this.interval);
-    this.interval = setInterval(this.nextWord.bind(this), ms)
-
     this.setState({ wpm });
   }
 
@@ -131,7 +135,7 @@ export default class Reader extends React.Component {
         <Slider
           minimumValue={50}
           maximumValue={1000}
-          step={50}
+          step={5}
           value={this.state.wpm}
           onValueChange={this.updateWPM.bind(this)}
         />
