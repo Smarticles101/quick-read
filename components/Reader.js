@@ -1,7 +1,9 @@
 import * as React from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet, ScrollView } from 'react-native';
 
-import { Slider, Icon } from 'react-native-elements';
+import { Slider, Icon, List, ListItem } from 'react-native-elements';
+
+const dateformat = require('dateformat');
 
 export default class Reader extends React.Component {
   state = {
@@ -15,27 +17,36 @@ export default class Reader extends React.Component {
 
   componentWillMount() {
 
-    this.paragraph = this.props.paragraph.split(/ |\n/g)
+    if (this.props.book.text) {
+      this.paragraph = this.props.book.text.split(" ")
+    } else if (this.props.book.chapters) {
+      this.paragraph = this.props.book.chapters.map((chap) => chap.text).join(" ").split(" ")
+    }
 
-    if (!this.interval) {
-      this.interval = setInterval(this.nextWord.bind(this), 1 / (this.state.wpm / 60) * 1000)
+    if (!this.timeout) {
+      this.timeout = setTimeout(this.tick.bind(this), 1 / (this.state.wpm / 60) * 1000)
     }
 
     if (this.state.word === null) {
-      this.setState({ word: this.paragraph[this.index++] })
+      do {
+        word = this.paragraph[this.index++]
+      } while (word === '')
+
+      this.setState({ word })
     }
   }
 
   componentWillUnmount() {
-    if (this.interval) {
-      clearInterval(this.interval)
+    if (this.timeout) {
+      clearInterval(this.timeout)
     }
   }
 
-  nextWord() {
+  tick() {
+    time = 1 / (this.state.wpm / 60) * 1000
+    word = this.state.word
+    
     if (!this.state.pause) {
-      word = null
-      
       do {
         word = this.paragraph[this.index++]
       } while (word === '')
@@ -47,6 +58,8 @@ export default class Reader extends React.Component {
         this.index = 0;
       }
     }
+    
+    this.timeout = setTimeout(this.tick.bind(this), new RegExp(/\.$|!$|\?$|\;$|\,$/).test(word) ? time * 2 : time)
   }
 
   pause() {
@@ -105,15 +118,60 @@ export default class Reader extends React.Component {
   updateWPM(wpm) {
     ms = 1 / (wpm / 60) * 1000;
 
-    clearInterval(this.interval);
-    this.interval = setInterval(this.nextWord.bind(this), ms)
-
     this.setState({ wpm });
+  }
+
+  timeLeft() {
+    wordsPerSeconds = this.state.wpm / 60;
+
+    timeLeft = Math.round((this.paragraph.length - this.index)/wordsPerSeconds);
+
+    timeLeft = new Date(timeLeft * 1000);
+
+    response = dateformat(timeLeft, "UTC:hh:MM:ss");
+
+    if(timeLeft < 3600 * 1000) {
+      response = response.replace("12", "00");
+    }
+
+    return response;
   }
 
   render() {
     return (
       <View style={styles.container}>
+        {this.props.book.chapters? 
+        <ScrollView
+          style={styles.chapterScroll}
+        >
+          <List>
+            {
+              this.props.book.chapters.map((chap, ind, arr) => 
+                chap.title ?
+                <ListItem
+                  key={chap.id}
+                  title={chap.title}
+                  onPress={() => {
+                    index = 0;
+
+                    for (var i = 0; i < ind; i++) {
+                      index += arr[i].text.split(" ").length
+                    }
+
+                    this.index = index
+                    this.setState({ word: this.paragraph[index] })
+                  }}
+                />
+                :
+                null
+              )
+            }
+          </List>
+        </ScrollView>
+        :
+        null
+        }
+
         <Text style={styles.paragraph}>
           {this.state.word}
         </Text>
@@ -131,13 +189,13 @@ export default class Reader extends React.Component {
         <Slider
           minimumValue={50}
           maximumValue={1000}
-          step={50}
+          step={5}
           value={this.state.wpm}
           onValueChange={this.updateWPM.bind(this)}
         />
 
         <Text style={styles.statusText}>
-          {`${this.state.wpm}wpm\n${this.index}/${this.paragraph.length}`}
+          {`${this.state.wpm}wpm\n${this.index}/${this.paragraph.length}\n${this.timeLeft()}`}
         </Text>
       </View>
     );
@@ -147,7 +205,6 @@ export default class Reader extends React.Component {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'stretch',
-    marginTop: 50,
     flex: 1
   },
   paragraph: {
@@ -155,6 +212,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     color: '#34495e',
+    marginTop: 50,
+    marginBottom: 20
   },
   statusText: {
     textAlign: 'center',
@@ -164,5 +223,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     margin: 24
+  },
+  chapterScroll: {
+    height: 50,
+    flexGrow: 0
   }
 });
