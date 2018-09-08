@@ -1,6 +1,18 @@
 # Quick Read
 
-An app that helps people read faster.
+A spritz-like app that helps people read faster. Written in react-native with expo.io
+
+![Import screencast](https://github.com/Smarticles101/quick-read/blob/master/import.GIF?raw=true)
+
+![Reader screencast](https://github.com/Smarticles101/quick-read/blob/master/reader.GIF?raw=true)
+
+## Setup / Howto
+
+```
+git clone https://github.com/Smarticles101/quick-read
+cd quick-read && npm i
+npm start
+```
 
 ### TODO
 Todo list is sorted by short-term, mid-term, and long-term
@@ -12,8 +24,9 @@ goals. Each individual goal is not sorted cronologically.
 - [X] Local saving
 - [X] Importing epub book
 - [ ] Importing pdf book
+- [ ] Other types of ebook imports
 - [ ] Bookmarks/spot saving
-- [ ] View chapters if imported from epub
+- [X] View chapters if imported from epub
 - [ ] Better textfield handling
 - [ ] Loading indicator when importing epub
 
