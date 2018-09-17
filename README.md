@@ -1,5 +1,7 @@
 # Quick Read
 
+[![Join the chat at https://gitter.im/quick-read/Lobby](https://badges.gitter.im/quick-read/Lobby.svg)](https://gitter.im/quick-read/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 A spritz-like app that helps people read faster. Written in react-native with expo.io
 
 ![Import screencast](https://github.com/Smarticles101/quick-read/blob/master/import.GIF?raw=true)
