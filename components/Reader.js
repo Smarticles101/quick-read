@@ -137,7 +137,18 @@ export default class Reader extends React.Component {
     return response;
   }
 
+  centerWord(word) {
+      ind = Math.ceil(word.length / 3)
+      return {
+          center: word.charAt(ind),
+          left: word.substring(0, ind),
+          right: word.substring(ind+1)
+      }
+  }
+
   render() {
+    centeredWord = this.centerWord(this.state.word)
+
     return (
       <View style={styles.container}>
         {this.props.book.chapters? 
@@ -172,9 +183,11 @@ export default class Reader extends React.Component {
         null
         }
 
-        <Text style={styles.paragraph}>
-          {this.state.word}
-        </Text>
+        <View style={{marginTop: 50, marginBottom: 20, flexDirection: 'row'}}>
+          <Text style={{...styles.paragraph, flex: 2, textAlign: 'right'}}>{centeredWord.left}</Text>
+          <Text style={{...styles.paragraph, color: 'red'}}>{centeredWord.center}</Text>
+          <Text style={{...styles.paragraph, flex: 3, textAlign: 'left'}}>{centeredWord.right}</Text>
+        </View>
 
         <View style={styles.buttonBar}>
           <Icon size={30} name="fast-rewind" onPress={this.back.bind(this)} />
@@ -202,7 +215,7 @@ export default class Reader extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = {
   container: {
     alignItems: 'stretch',
     flex: 1
@@ -211,9 +224,6 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: 'bold',
     textAlign: 'center',
-    color: '#34495e',
-    marginTop: 50,
-    marginBottom: 20
   },
   statusText: {
     textAlign: 'center',
@@ -228,4 +238,4 @@ const styles = StyleSheet.create({
     height: 50,
     flexGrow: 0
   }
-});
+};
