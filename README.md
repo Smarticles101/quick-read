@@ -5,8 +5,6 @@
 A spritz-like app that helps people read faster. Written in react-native with expo.io
 (I'm 17 so please give me feedback)
 
-[![Get it on google play](https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png)](https://play.google.com/store/apps/details?id=me.logans.quickread)
-
 ![Reader screencast](https://github.com/Smarticles101/quick-read/blob/master/reader.GIF?raw=true)
 
 ## Setup / Howto
@@ -48,6 +46,7 @@ goals. Each individual goal is not necesarily sorted cronologically.
 - [ ] Loading indicator when importing
 - [ ] Refactor / Rewrite
 - [ ] Comment stuff
+- [ ] Make it work on android even though that might require native code at this point cause idk how to make it work
 
 #### Mid-term (may happen)
 - [ ] Animate all the things!
