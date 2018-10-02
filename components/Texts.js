@@ -144,7 +144,7 @@ export default class Texts extends React.Component {
             title="Add text"
             fabLeft={{
               name: 'clear',
-              color: 'red'
+              color: TextsStyles.red
             }}
             onLeftFab={() => this.setState({ addText: false })}
             onSubmit={(formData) => {this.submitFormData({...formData, type: 'raw'}); this.setState({ addText: false })}}
@@ -163,7 +163,7 @@ export default class Texts extends React.Component {
                   <Fab
                     containerStyle={TextsStyles.fabLeft}
                     name="delete"
-                    color="red"
+                    color={TextsStyles.red}
                     onPress={this.deleteTitle.bind(this)}
                   />
 

@@ -20,7 +20,9 @@ const TextsStyles = StyleSheet.create({
       bottom: 10,
       left: 0,
       right: 0,
-    }
+    },
+    danger: 'red',
+    warning: 'orange'
   });
 
   export default TextsStyles;
