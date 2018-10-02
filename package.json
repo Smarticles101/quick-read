@@ -13,7 +13,8 @@
     "eject": "react-native-scripts eject",
     "android": "react-native-scripts android",
     "ios": "react-native-scripts ios",
-    "test": "jest"
+    "test": "jest",
+    "android-sim": "react-native run-android --simulator"
   },
   "jest": {
     "preset": "jest-expo"
