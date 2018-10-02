@@ -1,25 +1,17 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
+import { Header } from 'react-native-elements';
 
 import Texts from './components/Texts';
-import { Header } from 'react-native-elements';
+import AppStyles from './styles/AppStyles';
 
 export default class App extends React.Component {
   render() {
     return (
-      <View style={styles.container}>
-        <Header centerComponent={{ text: 'Quick Read', style: { color: '#fff' } }} />
+      <View style={AppStyles.container}>
+        <Header centerComponent={{ text: 'Quick Read', style: AppStyles.header }} />
         <Texts />
       </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'stretch',
-    justifyContent: 'center',
-  },
-});
