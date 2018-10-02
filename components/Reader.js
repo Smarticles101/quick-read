@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { Text, View, StyleSheet, ScrollView } from 'react-native';
+import { Text, View, ScrollView } from 'react-native';
 
 import { Slider, Icon, List, ListItem } from 'react-native-elements';
+import ReaderStyles from '../styles/ReaderStyles';
 
 const dateformat = require('dateformat');
 
@@ -150,10 +151,10 @@ export default class Reader extends React.Component {
     centeredWord = this.centerWord(this.state.word)
 
     return (
-      <View style={styles.container}>
+      <View style={ReaderStyles.container}>
         {this.props.book.chapters? 
         <ScrollView
-          style={styles.chapterScroll}
+          style={ReaderStyles.chapterScroll}
         >
           <List>
             {
@@ -184,12 +185,12 @@ export default class Reader extends React.Component {
         }
 
         <View style={{marginTop: 50, marginBottom: 20, flexDirection: 'row'}}>
-          <Text style={{...styles.paragraph, flex: 2, textAlign: 'right'}}>{centeredWord.left}</Text>
-          <Text style={{...styles.paragraph, color: 'red'}}>{centeredWord.center}</Text>
-          <Text style={{...styles.paragraph, flex: 3, textAlign: 'left'}}>{centeredWord.right}</Text>
+          <Text style={{...ReaderStyles.paragraph, flex: 2, textAlign: 'right'}}>{centeredWord.left}</Text>
+          <Text style={{...ReaderStyles.paragraph, color: 'red'}}>{centeredWord.center}</Text>
+          <Text style={{...ReaderStyles.paragraph, flex: 3, textAlign: 'left'}}>{centeredWord.right}</Text>
         </View>
 
-        <View style={styles.buttonBar}>
+        <View style={ReaderStyles.buttonBar}>
           <Icon size={30} name="fast-rewind" onPress={this.back.bind(this)} />
           {!this.state.pause ?
             <Icon size={30} name="pause" onPress={this.pause.bind(this)} />
@@ -207,35 +208,10 @@ export default class Reader extends React.Component {
           onValueChange={this.updateWPM.bind(this)}
         />
 
-        <Text style={styles.statusText}>
+        <Text style={ReaderStyles.statusText}>
           {`${this.state.wpm}wpm\n${this.index}/${this.paragraph.length}\n${this.timeLeft()}`}
         </Text>
       </View>
     );
   }
 }
-
-const styles = {
-  container: {
-    alignItems: 'stretch',
-    flex: 1
-  },
-  paragraph: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  statusText: {
-    textAlign: 'center',
-    fontSize: 20,
-  },
-  buttonBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    margin: 24
-  },
-  chapterScroll: {
-    height: 50,
-    flexGrow: 0
-  }
-};
