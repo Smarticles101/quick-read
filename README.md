@@ -51,7 +51,7 @@ goals. Each individual goal is not necesarily sorted cronologically.
 #### Mid-term (may happen)
 - [ ] Animate all the things!
 - [ ] Cloud saving with google drive
-- [ ] Turn 18 so I can put it on the App Store
+- [ ] Turn 18 so I can put it on the App Store - (Possibly extort someone who is already 18)
 
 #### Long-term (subject to change, may not happen)
 - [ ] Social features

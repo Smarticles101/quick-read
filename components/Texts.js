@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, ScrollView, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 
 import { Icon, List, ListItem, Card, FormInput, FormLabel, FormValidationMessage, Button } from 'react-native-elements';
 
@@ -11,6 +11,7 @@ import Reader from './Reader';
 import EPub from 'epub-rn';
 import TextFormPopup from './TextFormPopup';
 import Fab from './Fab';
+import TextsStyles from '../styles/TextsStyles';
 
 export default class Texts extends React.Component {
 
@@ -100,7 +101,7 @@ export default class Texts extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <View style={TextsStyles.container}>
         <ScrollView>
           <List>
             {
@@ -115,7 +116,7 @@ export default class Texts extends React.Component {
           </List>
         </ScrollView>
 
-        <View style={styles.fabRight}>
+        <View style={TextsStyles.fabRight}>
           {this.state.addFab?
             <View>
               <Fab
@@ -143,7 +144,7 @@ export default class Texts extends React.Component {
             title="Add text"
             fabLeft={{
               name: 'clear',
-              color: 'red'
+              color: TextsStyles.red
             }}
             onLeftFab={() => this.setState({ addText: false })}
             onSubmit={(formData) => {this.submitFormData({...formData, type: 'raw'}); this.setState({ addText: false })}}
@@ -153,21 +154,21 @@ export default class Texts extends React.Component {
 
         {
           this.state.reader ?
-            <Card containerStyle={styles.popup} wrapperStyle={{ flex: 1 }} title={this.state.title}>
+            <Card containerStyle={TextsStyles.popup} wrapperStyle={{ flex: 1 }} title={this.state.title}>
               {!this.state.edit ?
                 <View style={{ flex: 1 }}>
                 
                   <Reader book={this.state.texts.find((e) => e.title === this.state.title)} />
 
                   <Fab
-                    containerStyle={styles.fabLeft}
+                    containerStyle={TextsStyles.fabLeft}
                     name="delete"
-                    color="red"
+                    color={TextsStyles.red}
                     onPress={this.deleteTitle.bind(this)}
                   />
 
                   <Fab
-                    containerStyle={styles.fabRight}
+                    containerStyle={TextsStyles.fabRight}
                     name="clear"
                     onPress={() => this.setState({ reader: false, title: null })}
                   />
@@ -184,26 +185,3 @@ export default class Texts extends React.Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  fabRight: {
-    position: 'absolute',
-    right: 10,
-    bottom: 10
-  },
-  fabLeft: {
-    position: 'absolute',
-    left: 10,
-    bottom: 10
-  },
-  popup: {
-    position: 'absolute',
-    top: 0,
-    bottom: 10,
-    left: 0,
-    right: 0,
-  }
-});

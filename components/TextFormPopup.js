@@ -1,8 +1,9 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 
 import { Card, FormInput, FormLabel, FormValidationMessage } from 'react-native-elements';
 import Fab from './Fab';
+import TextFormPopupStyles from '../styles/TextFormPopupStyles';
 
 export default class TextFormPopup extends React.Component {
 
@@ -39,7 +40,7 @@ export default class TextFormPopup extends React.Component {
 
   render() {
     return (
-        <Card containerStyle={styles.popup} wrapperStyle={{ flex: 1 }} title={this.props.title}>
+        <Card containerStyle={TextFormPopupStyles.popup} wrapperStyle={{ flex: 1 }} title={this.props.title}>
             {
                 /*
                 TODO:
@@ -58,12 +59,12 @@ export default class TextFormPopup extends React.Component {
             </View>
 
             <Fab
-                containerStyle={styles.fabLeft}
+                containerStyle={TextFormPopupStyles.fabLeft}
                 {...this.props.fabLeft}
                 onPress={() => this.setState({ formData: {} }, this.props.onLeftFab)}
             />
             <Fab
-                containerStyle={styles.fabRight}
+                containerStyle={TextFormPopupStyles.fabRight}
                 color="green"
                 name="done"
                 onPress={this.submitFormData.bind(this)}
@@ -73,26 +74,3 @@ export default class TextFormPopup extends React.Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  fabRight: {
-    position: 'absolute',
-    right: 10,
-    bottom: 10
-  },
-  fabLeft: {
-    position: 'absolute',
-    left: 10,
-    bottom: 10
-  },
-  popup: {
-    position: 'absolute',
-    top: 0,
-    bottom: 10,
-    left: 0,
-    right: 0,
-  }
-});
