@@ -138,7 +138,10 @@ export default class Reader extends React.Component {
   }
 
   centerWord(word) {
-      ind = Math.ceil(word.length / 3)
+      ind = Math.floor(word.length / 2)
+      if (ind % 2 === 0)
+        ind -= 1
+
       return {
           center: word.charAt(ind),
           left: word.substring(0, ind),
@@ -184,9 +187,9 @@ export default class Reader extends React.Component {
         }
 
         <View style={{marginTop: 50, marginBottom: 20, flexDirection: 'row'}}>
-          <Text style={{...styles.paragraph, flex: 2, textAlign: 'right'}}>{centeredWord.left}</Text>
+          <Text style={{...styles.paragraph, flex: 1, textAlign: 'right'}}>{centeredWord.left}</Text>
           <Text style={{...styles.paragraph, color: 'red'}}>{centeredWord.center}</Text>
-          <Text style={{...styles.paragraph, flex: 3, textAlign: 'left'}}>{centeredWord.right}</Text>
+          <Text style={{...styles.paragraph, flex: 1, textAlign: 'left'}}>{centeredWord.right}</Text>
         </View>
 
         <View style={styles.buttonBar}>
