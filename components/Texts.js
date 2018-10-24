@@ -28,15 +28,9 @@ export default class Texts extends React.Component {
   }
 
   componentDidUpdate(oldProps, oldState) {
-    //console.log(this.state.texts.length);
-    //console.log(oldState.texts.length);
-    //if (this.state.texts != oldState.texts) {
-    //  console.log('Saving')
-    Expo.SecureStore.setItemAsync('texts', JSON.stringify(this.state.texts))
-    //}
-
-    // Not sure why this doesn't work????
-    // Let's just save all the time ;)
+    if (this.state.texts != oldState.texts) {
+      Expo.SecureStore.setItemAsync('texts', JSON.stringify(this.state.texts))
+    }
   }
 
   submitFormData(formData) {
@@ -46,7 +40,7 @@ export default class Texts extends React.Component {
       title = `${formData.title} ${inc++}`
     }
       
-    texts = this.state.texts
+    texts = JSON.parse(JSON.stringify(this.state.texts))
 
     texts.push({...formData, title})
 
@@ -55,7 +49,7 @@ export default class Texts extends React.Component {
 
   deleteTitle() {
     textIndex = this.state.texts.findIndex((e) => e.title === this.state.title)
-    texts = this.state.texts
+    texts = JSON.parse(JSON.stringify(this.state.texts))
 
     texts.splice(textIndex, 1)
 
