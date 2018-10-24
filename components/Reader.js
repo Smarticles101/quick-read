@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { Text, View, StyleSheet, ScrollView } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, FlatList, TouchableOpacity } from 'react-native';
 
-import { Slider, Icon, List, ListItem } from 'react-native-elements';
+import { Slider, Icon } from 'react-native-elements';
 
 const dateformat = require('dateformat');
 
@@ -155,33 +155,30 @@ export default class Reader extends React.Component {
     return (
       <View style={styles.container}>
         {this.props.book.chapters? 
-        <ScrollView
-          style={styles.chapterScroll}
-        >
-          <List>
-            {
-              this.props.book.chapters.map((chap, ind, arr) => 
-                chap.title ?
-                <ListItem
-                  key={chap.id}
-                  title={chap.title}
-                  onPress={() => {
-                    index = 0;
+          <FlatList 
+            style={styles.chapterScroll}
+            data={this.props.book.chapters}
+            renderItem={({item, index}) => {
+              return (
+              <TouchableOpacity onPress={() => {
+                ind = 0;
 
-                    for (var i = 0; i < ind; i++) {
-                      index += arr[i].text.split(" ").length
-                    }
+                for (var i = 0; i < index; i++) {
+                  ind += this.props.book.chapters[i].text.split(" ").length
+                }
 
-                    this.index = index
-                    this.setState({ word: this.paragraph[index] })
-                  }}
-                />
-                :
-                null
+                this.index = ind
+                this.setState({ word: this.paragraph[index] })
+              }}>
+                <View style={{padding: 5, alignItems: 'center'}}>
+                  <Text>
+                    {item.title}
+                  </Text>
+                </View>
+              </TouchableOpacity>
               )
-            }
-          </List>
-        </ScrollView>
+            }}
+          />
         :
         null
         }
@@ -239,6 +236,7 @@ const styles = {
   },
   chapterScroll: {
     height: 50,
-    flexGrow: 0
+    flexGrow: 0,
+    alignItems: "center"
   }
 };
